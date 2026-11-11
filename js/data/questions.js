@@ -8,9 +8,16 @@ const SUBJECT_META = {
   biology: { label: "Biology", icon: "🧬", color: "#10b981" }
 };
 
+/* Practice draws from the main bank plus every previous-year paper, so a
+   question missed in a back paper can be drilled again. */
+function practicePool() {
+  return QUESTION_BANK.concat(typeof allPyqQuestions === "function" ? allPyqQuestions() : []);
+}
+
 function getQuestionsBySubject(subject) {
-  if (subject === "all") return QUESTION_BANK.slice();
-  return QUESTION_BANK.filter((q) => q.subject === subject);
+  const pool = practicePool();
+  if (subject === "all") return pool.slice();
+  return pool.filter((q) => q.subject === subject);
 }
 
 function getChapterName(chapterId) {

@@ -4,6 +4,8 @@ An offline-first NEET UG preparation tool. No account, no backend, no build step
 
 ![stack](https://img.shields.io/badge/stack-vanilla%20JS-f7df1e) ![no build](https://img.shields.io/badge/build-none-22d3a5) ![offline](https://img.shields.io/badge/works-offline-6d5efc)
 
+**Live:** https://nwazishali.github.io/NEET-Examination-Preparation/
+
 ## Run it
 
 ```bash
@@ -22,6 +24,7 @@ There is no install step: the app is plain HTML + CSS + ES5-style JavaScript (cl
 | --- | --- |
 | **Mock tests** | Full-length paper (Physics 45, Chemistry 45, Biology 90 = 180 Q) in 200 minutes, or a 40-question mini test in 40 minutes. Real NEET marking (+4 / −1 / 0), live countdown with auto-submit, question palette, mark-for-review, keyboard shortcuts (1–4, ← →, M). |
 | **Test report** | Score, accuracy, correct/incorrect/skipped split, subject-wise breakdown, indicative milestone band, and a full answer review with explanations. |
+| **Back papers** | Six year-wise NEET papers (2019–2024) with 12 questions each — 4 Physics, 4 Chemistry, 4 Biology. Answer them untimed with NEET marking, get an instant report with subject breakdown and full answer review. Best scores are stored per year. |
 | **Practice** | Untimed mode with instant explanations. Filters for smart practice (unseen + previously-wrong first), unseen only, wrong only, bookmarks, subject, chapter and difficulty. |
 | **Syllabus tracker** | All 50 chapters across Physics, Chemistry and Biology with exam weightage (questions per paper), plus your own accuracy and coverage per chapter, and a computed priority list. |
 | **12-week planner** | A plan generated from chapter weightage, with tickable topics, mock-test markers and completion progress. |
@@ -33,8 +36,9 @@ There is no install step: the app is plain HTML + CSS + ES5-style JavaScript (cl
 
 ## Content
 
-- **117 questions**, each with four options, a verified answer and a one-line explanation that teaches the concept.
-  - Physics 36 · Chemistry 36 · Biology 45 — covering every chapter in the syllabus map.
+- **189 questions** total, each with four options, a verified answer and a one-line explanation that teaches the concept.
+  - **117 in the main bank** — Physics 36 · Chemistry 36 · Biology 45, covering every chapter in the syllabus map.
+  - **72 in the back papers** — 6 papers × 12 questions (4 per subject), spanning 2019–2024.
 - **50 syllabus chapters** with weightages that sum exactly to the blueprints: Physics 45, Chemistry 45, Biology 90.
 - **52 formulas**, **12 mnemonics**, **20 flashcards**, **6 strategy notes**.
 
@@ -54,10 +58,12 @@ js/
   data/
     syllabus.js             # chapters + weightage, exam blueprint, 12-week plan generator
     questions-*.js          # question bank per subject
-    questions.js            # aggregation + exam paper builder
+    questions.js            # aggregation, practice pool + exam paper builder
+    pyq.js                  # previous years papers (2019–2024), 72 questions
     formulas.js             # formulas, mnemonics, flashcards, tips
   views/
     exam.js                 # mock test engine, timer, result report
+    pyq.js                  # previous-year papers: index, runner, report
     practice.js             # practice runner, session summary, note editor
     syllabus.js             # chapter tracker
     planner.js              # study planner
@@ -78,10 +84,18 @@ Append to the relevant `js/data/questions-<subject>.js` file:
   explanation: "Why the answer is right." }
 ```
 
-`chapter` must match an `id` from `js/data/syllabus.js`. The new question automatically joins the practice pool, mock papers and the syllabus tracker.
+`chapter` must match an `id` from `js/data/syllabus.js`.
+
+Previous-year questions live in `js/data/pyq.js` and additionally require a `year`. They are automatically added to the practice pool, the Mistakes tab and their matching paper:
+
+```js
+{ id: "pyq25-p1", year: 2025, subject: "physics", chapter: "p-optics", difficulty: "medium",
+  q: "…", options: ["…"], answer: 0, explanation: "…" }
+``` The new question automatically joins the practice pool, mock papers and the syllabus tracker.
 
 ## Notes
 
 - Progress lives in your browser only. Clearing site data erases it — use **Settings → Export JSON** for backups.
 - The milestone band shown after a mock (e.g. "Top 5% · government MBBS range") is a rough motivational marker, not a rank prediction.
+- Back papers are **representative year-wise sets modelled on the NEET UG papers**, not verbatim reproductions of the official booklets (which are copyrighted). They are for practice and diagnostics.
 - No analytics, no network calls, no tracking.

@@ -3,6 +3,7 @@
 const NAV_ITEMS = [
   { route: "dashboard", label: "Dashboard", icon: "◉" },
   { route: "exam", label: "Mock Test", icon: "◈" },
+  { route: "pyq", label: "Back Papers", icon: "▣" },
   { route: "practice", label: "Practice", icon: "✎" },
   { route: "syllabus", label: "Syllabus Tracker", icon: "▤" },
   { route: "planner", label: "Study Planner", icon: "▦" },
@@ -50,7 +51,7 @@ function renderShell() {
         ])
       ]),
       el("div", { class: "row between tiny muted", style: "padding: 0 6px" }, [
-        el("span", {}, `${QUESTION_BANK.length} questions`),
+        el("span", {}, `${practicePool().length} questions`),
         el("span", {}, "offline-ready")
       ])
     ])
@@ -178,7 +179,7 @@ function dashboardView() {
   /* headline stats */
   const statCards = [
     { label: "Overall accuracy", value: `${overall.accuracy}%`, sub: `${overall.correct}/${overall.attempts} correct`, color: "#22d3a5" },
-    { label: "Questions attempted", value: overall.attempts, sub: `${overall.unique} unique of ${QUESTION_BANK.length}`, color: "#6d5efc" },
+    { label: "Questions attempted", value: overall.attempts, sub: `${overall.unique} unique of ${practicePool().length}`, color: "#6d5efc" },
     { label: "Bank coverage", value: `${overall.coverage}%`, sub: "of the offline question bank", color: "#f7b955" },
     { label: "Study time", value: formatDuration(overall.studySeconds), sub: `${overall.sessions} tests completed`, color: "#60a5fa" }
   ];

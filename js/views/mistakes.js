@@ -2,10 +2,10 @@
 
 function mistakesView() {
   const st = getState();
-  const missed = QUESTION_BANK.filter((q) => st.seen[q.id] && st.seen[q.id].wrong > 0)
+  const missed = practicePool().filter((q) => st.seen[q.id] && st.seen[q.id].wrong > 0)
     .sort((a, b) => (st.seen[b.id].wrong - st.seen[a.id].wrong));
-  const bookmarked = QUESTION_BANK.filter((q) => st.bookmarks.includes(q.id));
-  const noted = QUESTION_BANK.filter((q) => st.notes[q.id]);
+  const bookmarked = practicePool().filter((q) => st.bookmarks.includes(q.id));
+  const noted = practicePool().filter((q) => st.notes[q.id]);
 
   const questionRow = (q, metaExtra) => {
     const rec = st.seen[q.id];
