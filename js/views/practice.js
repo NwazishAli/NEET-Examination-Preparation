@@ -17,7 +17,7 @@ function startPractice(opts = {}) {
   } else if (mode === "weak") {
     pool = pool.filter((q) => st.seen[q.id] && st.seen[q.id].wrong > 0);
   } else if (mode === "bookmarked") {
-    pool = QUESTION_BANK.filter((q) => st.bookmarks.includes(q.id));
+    pool = practicePool().filter((q) => st.bookmarks.includes(q.id));
   } else if (mode === "unseen") {
     pool = pool.filter((q) => !st.seen[q.id]);
   } else {
@@ -48,7 +48,7 @@ function practiceView() {
 function practiceIntroView() {
   const st = getState();
   const wrongCount = Object.values(st.seen).filter((r) => r.wrong > 0).length;
-  const unseenCount = QUESTION_BANK.length - Object.keys(st.seen).length;
+  const unseenCount = practicePool().length - Object.keys(st.seen).length;
 
   const options = [
     { title: "Smart practice", sub: "Unseen + previously wrong questions first", mode: "smart", icon: "★", cls: "btn-primary" },
@@ -93,7 +93,7 @@ function practiceIntroView() {
         el("h1", {}, "Practice"),
         el("p", {}, "Untimed practice with instant explanations — the fastest way to build accuracy.")
       ]),
-      el("span", { class: "badge primary" }, `${QUESTION_BANK.length} questions available`)
+      el("span", { class: "badge primary" }, `${practicePool().length} questions available`)
     ]),
     el("div", { class: "grid grid-3", style: "margin-bottom:16px" }, options.map((o) =>
       el("div", { class: "card" }, [

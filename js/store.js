@@ -137,7 +137,7 @@ function chapterStats() {
   const rows = [];
   Object.entries(SYLLABUS).forEach(([subject, data]) => {
     data.chapters.forEach((ch) => {
-      const qs = QUESTION_BANK.filter((q) => q.chapter === ch.id);
+      const qs = practicePool().filter((q) => q.chapter === ch.id);
       let attempts = 0, correct = 0, seen = 0;
       qs.forEach((q) => {
         const rec = st.seen[q.id];
@@ -175,7 +175,7 @@ function overallStats() {
     correct,
     unique,
     accuracy: pct(correct, attempts),
-    coverage: pct(unique, QUESTION_BANK.length),
+    coverage: pct(unique, practicePool().length),
     sessions: st.sessions.length,
     studySeconds: st.studySeconds,
     streak: st.streak

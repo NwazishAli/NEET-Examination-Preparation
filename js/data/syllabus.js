@@ -62,7 +62,11 @@ const SYLLABUS = {
       { id: "b-cell", name: "Cell: Unit of Life & Cell Cycle", weight: 7, class: 11 },
       { id: "b-biomolecules", name: "Biomolecules", weight: 4, class: 11 },
       { id: "b-plant-physio", name: "Plant Physiology (Photosynthesis, Respiration, Growth)", weight: 8, class: 11 },
-      { id: "b-human-physio", name: "Human Physiology", weight: 18, class: 11 },
+      { id: "b-digestion", name: "Digestion & Absorption", weight: 3, class: 11 },
+      { id: "b-breathing", name: "Breathing & Exchange of Gases", weight: 4, class: 11 },
+      { id: "b-circulation", name: "Body Fluids & Circulation", weight: 5, class: 11 },
+      { id: "b-excretion", name: "Excretory Products & Their Elimination", weight: 3, class: 11 },
+      { id: "b-locomotion", name: "Locomotion & Movement", weight: 3, class: 11 },
       { id: "b-reproduction", name: "Reproduction (Plants & Humans)", weight: 9, class: 12 },
       { id: "b-genetics", name: "Genetics & Evolution", weight: 12, class: 12 },
       { id: "b-molecular", name: "Molecular Basis of Inheritance", weight: 7, class: 12 },
@@ -120,8 +124,8 @@ function buildStudyPlan() {
     const dayTopics = [];
     if (i === 0) dayTopics.push("b-living", "b-cell", "b-biomolecules");
     if (i === 1) dayTopics.push("b-plant-kingdom", "b-plant-physio");
-    if (i === 2) dayTopics.push("b-human-physio");
-    if (i === 3) dayTopics.push("b-human-physio");
+    if (i === 2) dayTopics.push("b-digestion", "b-breathing", "b-circulation");
+    if (i === 3) dayTopics.push("b-excretion", "b-locomotion");
     if (i === 4) dayTopics.push("b-genetics", "b-molecular");
     if (i === 5) dayTopics.push("b-reproduction", "b-biotech");
     if (i === 6) dayTopics.push("b-ecology", "b-animal-kingdom");

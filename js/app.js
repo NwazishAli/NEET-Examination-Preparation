@@ -1,20 +1,50 @@
 /* ===== App shell, router and dashboard ===== */
 
-const NAV_ITEMS = [
-  { route: "dashboard", label: "Dashboard", icon: "◉" },
-  { route: "exam", label: "Mock Test", icon: "◈" },
-  { route: "practice", label: "Practice", icon: "✎" },
-  { route: "syllabus", label: "Syllabus Tracker", icon: "▤" },
-  { route: "planner", label: "Study Planner", icon: "▦" },
-  { route: "flashcards", label: "Flashcards", icon: "⬒" },
-  { route: "formulas", label: "Formulas & Tips", icon: "∑" },
-  { route: "mistakes", label: "Mistakes & Notes", icon: "⚑" },
-  { route: "settings", label: "Settings", icon: "⚙" }
+const NAV_GROUPS = [
+  { title: "Study", items: [
+    { route: "dashboard", label: "Dashboard", icon: "◉" },
+    { route: "subjects", label: "Subjects", icon: "▤" },
+    { route: "questionbank", label: "Question Bank", icon: "❓" },
+    { route: "drill", label: "MCQ Drill", icon: "🎯" }
+  ] },
+  { title: "Test", items: [
+    { route: "exam", label: "Mock Test", icon: "◈" },
+    { route: "mockcentre", label: "Mock Centre", icon: "📝" },
+    { route: "pyq", label: "Back Papers", icon: "▣" },
+    { route: "practice", label: "Practice", icon: "✎" }
+  ] },
+  { title: "Revise", items: [
+    { route: "syllabus", label: "Syllabus Tracker", icon: "▦" },
+    { route: "planner", label: "Study Planner", icon: "🗓" },
+    { route: "flashcards", label: "Flashcards", icon: "⬒" },
+    { route: "formulas", label: "Formulas & Tips", icon: "∑" },
+    { route: "mistakes", label: "Mistakes & Notes", icon: "⚑" }
+  ] },
+  { title: "More", items: [
+    { route: "settings", label: "Settings", icon: "⚙" }
+  ] }
 ];
+const NAV_ITEMS = NAV_GROUPS.flatMap((g) => g.items);
 
 let currentRoute = "dashboard";
 let activeExam = null;   // survives navigation while a test is in progress
 let practiceState = null;
+
+function knownView(route) {
+  return typeof VIEWS[route] === "function" || (route === "dashboard");
+}
+
+function readHashOpts() {
+  return {
+    subject: hashParam("subject") || undefined,
+    chapterId: hashParam("chapterId") || hashParam("chapter") || undefined
+  };
+}
+
+function hashParam(name) {
+  const m = location.hash.match(new RegExp(name + "=([^&#]*)"));
+  return m ? decodeURIComponent(m[1]) : null;
+}
 
 function applyTheme() {
   const st = getState();
@@ -34,12 +64,17 @@ function renderShell() {
         el("div", { class: "brand-sub" }, "Study Companion")
       ])
     ]),
-    el("nav", { class: "nav" }, NAV_ITEMS.map((item) =>
-      el("button", {
-        class: `nav-item ${currentRoute === item.route ? "active" : ""}`,
-        "data-route": item.route,
-        onclick: () => navigate(item.route)
-      }, [el("span", { class: "nav-icon" }, item.icon), item.label])
+    el("nav", { class: "nav" }, NAV_GROUPS.map((group) =>
+      el("div", { class: "nav-group" }, [
+        el("div", { class: "nav-group-title" }, group.title),
+        ...group.items.map((item) =>
+          el("button", {
+            class: `nav-item ${currentRoute === item.route ? "active" : ""}`,
+            "data-route": item.route,
+            onclick: () => navigate(item.route)
+          }, [el("span", { class: "nav-icon" }, item.icon), item.label])
+        )
+      ])
     )),
     el("div", { class: "sidebar-foot" }, [
       el("div", { class: "streak-chip" }, [
@@ -50,7 +85,7 @@ function renderShell() {
         ])
       ]),
       el("div", { class: "row between tiny muted", style: "padding: 0 6px" }, [
-        el("span", {}, `${QUESTION_BANK.length} questions`),
+        el("span", {}, `${practicePool().length} questions`),
         el("span", {}, "offline-ready")
       ])
     ])
@@ -90,7 +125,12 @@ function navigate(route, opts = {}) {
     if (!leave) return;
   }
   currentRoute = route;
-  if (location.hash !== `#/${route}`) location.hash = `#/${route}`;
+  const qs = Object.entries(opts)
+    .filter(([, v]) => v !== undefined && v !== null && v !== "")
+    .map(([k, v]) => `${k}=${encodeURIComponent(v)}`)
+    .join("&");
+  const target = `#/${route}${qs ? "?" + qs : ""}`;
+  if (location.hash !== target) location.hash = target;
   $$(".nav-item").forEach((n) => n.classList.toggle("active", n.dataset.route === route));
   const sb = $("#sidebar");
   if (sb && sb.classList.contains("open")) { sb.classList.remove("open"); $(".backdrop")?.remove(); }
@@ -103,9 +143,10 @@ function renderRoute(opts = {}) {
   if (!main) return;
   main.innerHTML = "";
   const view = VIEWS[currentRoute] || VIEWS.dashboard;
-  const node = view(opts);
+  const merged = Object.assign(readHashOpts(), opts);
+  const node = view(merged);
   main.appendChild(node);
-  if (typeof view.afterMount === "function") view.afterMount(node, opts);
+  if (typeof view.afterMount === "function") view.afterMount(node, merged);
 }
 
 /* ===================== Dashboard ===================== */
@@ -178,7 +219,7 @@ function dashboardView() {
   /* headline stats */
   const statCards = [
     { label: "Overall accuracy", value: `${overall.accuracy}%`, sub: `${overall.correct}/${overall.attempts} correct`, color: "#22d3a5" },
-    { label: "Questions attempted", value: overall.attempts, sub: `${overall.unique} unique of ${QUESTION_BANK.length}`, color: "#6d5efc" },
+    { label: "Questions attempted", value: overall.attempts, sub: `${overall.unique} unique of ${practicePool().length}`, color: "#6d5efc" },
     { label: "Bank coverage", value: `${overall.coverage}%`, sub: "of the offline question bank", color: "#f7b955" },
     { label: "Study time", value: formatDuration(overall.studySeconds), sub: `${overall.sessions} tests completed`, color: "#60a5fa" }
   ];
@@ -288,16 +329,17 @@ function boot() {
   loadState();
   applyTheme();
   if (!location.hash) location.hash = "#/dashboard";
-  currentRoute = (location.hash.replace("#/", "") || "dashboard").split("?")[0];
-  if (!NAV_ITEMS.some((n) => n.route === currentRoute)) currentRoute = "dashboard";
+  currentRoute = (location.hash.replace("#/", "") || "dashboard").split("?")[0].split("/")[0];
+  if (!knownView(currentRoute)) currentRoute = "dashboard";
   renderShell();
 
   window.addEventListener("hashchange", () => {
-    const route = (location.hash.replace("#/", "") || "dashboard").split("?")[0];
-    if (route === currentRoute) return;
-    currentRoute = NAV_ITEMS.some((n) => n.route === route) ? route : "dashboard";
+    const raw = location.hash.replace("#/", "") || "dashboard";
+    const route = raw.split("?")[0].split("/")[0];
+    if (route === currentRoute && !raw.includes("/")) return;
+    currentRoute = knownView(route) ? route : "dashboard";
     $$(".nav-item").forEach((n) => n.classList.toggle("active", n.dataset.route === currentRoute));
-    renderRoute();
+    renderRoute(readHashOpts());
   });
 
   document.addEventListener("keydown", handleShortcuts);
