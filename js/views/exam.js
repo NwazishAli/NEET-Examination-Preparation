@@ -23,6 +23,13 @@ function startExam(mode = "full") {
   navigate("exam");
 }
 
+function examLabel(ex) {
+  if (ex.mode === "mini") return "Mini test";
+  if (ex.mode === "subject") return `${SUBJECT_META[ex.subject].label} mock`;
+  if (ex.mode === "pyq") return "Back paper";
+  return "Full-length test";
+}
+
 function examView() {
   if (!activeExam) return examIntroView();
   if (activeExam.submitted) return examResultView(activeExam.result);
@@ -104,7 +111,7 @@ function examRunnerView() {
 
   const head = el("div", { class: "exam-top" }, [
     el("div", { class: "row" }, [
-      el("span", { class: "badge primary" }, ex.mode === "mini" ? "Mini test" : "Full-length"),
+      el("span", { class: "badge primary" }, examLabel(ex)),
       el("span", { class: "small muted" }, `${answered}/${ex.questions.length} answered`)
     ]),
     el("div", { class: "row" }, [
@@ -253,6 +260,7 @@ function submitExam(auto = false) {
   ex.submitted = true;
   ex.result = {
     mode: ex.mode,
+    label: examLabel(ex),
     total: ex.questions.length,
     correct, wrong, unattempted, score, maxScore,
     accuracy: pct(correct, correct + wrong),
@@ -267,6 +275,7 @@ function submitExam(auto = false) {
   recordSession({
     type: "exam",
     mode: ex.mode,
+    title: examLabel(ex),
     score, maxScore,
     correct, wrong, unattempted,
     accuracy: ex.result.accuracy,
@@ -306,7 +315,7 @@ function examResultView(res) {
   const header = el("div", { class: "view-head" }, [
     el("div", {}, [
       el("h1", {}, "Test report"),
-      el("p", {}, `${res.mode === "mini" ? "Mini" : "Full-length"} test · completed ${new Date(res.date).toLocaleString()}${res.auto ? " · auto-submitted on timeout" : ""}`)
+      el("p", {}, `${res.label || (res.mode === "mini" ? "Mini" : res.mode === "subject" ? "Subject" : "Full-length")} test · completed ${new Date(res.date).toLocaleString()}${res.auto ? " · auto-submitted on timeout" : ""}`)
     ]),
     el("div", { class: "row wrap" }, [
       el("button", { class: "btn btn-ghost", onclick: () => { activeExam = null; navigate("exam"); } }, "Another test"),

@@ -66,7 +66,7 @@ const PYQ_2019_2021 = [
   },
 
   {
-    id: "pyq19-b1", year: 2019, subject: "biology", chapter: "b-human-physio", difficulty: "easy",
+    id: "pyq19-b1", year: 2019, subject: "biology", chapter: "b-reproduction", difficulty: "easy",
     q: "Progesterone in the human female is secreted mainly by the:",
     options: ["Corpus luteum", "Anterior pituitary", "Graafian follicle before ovulation", "Adrenal cortex"],
     answer: 0,
@@ -87,7 +87,7 @@ const PYQ_2019_2021 = [
     explanation: "NCERT accounts 3 ATP per NADH and 2 ATP per FADH₂ in oxidative phosphorylation."
   },
   {
-    id: "pyq19-b4", year: 2019, subject: "biology", chapter: "b-human-physio", difficulty: "easy",
+    id: "pyq19-b4", year: 2019, subject: "biology", chapter: "b-digestion", difficulty: "easy",
     q: "Deficiency of which vitamin causes pernicious anaemia?",
     options: ["Vitamin B₁₂", "Vitamin B₁", "Vitamin C", "Vitamin K"],
     answer: 0,
@@ -168,7 +168,7 @@ const PYQ_2019_2021 = [
     explanation: "The egg apparatus and antipodals are haploid; only the endosperm is triploid."
   },
   {
-    id: "pyq20-b3", year: 2020, subject: "biology", chapter: "b-human-physio", difficulty: "medium",
+    id: "pyq20-b3", year: 2020, subject: "biology", chapter: "b-circulation", difficulty: "medium",
     q: "The enzyme that converts angiotensinogen to angiotensin I is:",
     options: ["Renin", "Angiotensin converting enzyme", "Aldosterone", "ADH"],
     answer: 0,
@@ -242,7 +242,7 @@ const PYQ_2019_2021 = [
   },
 
   {
-    id: "pyq21-b1", year: 2021, subject: "biology", chapter: "b-human-physio", difficulty: "easy",
+    id: "pyq21-b1", year: 2021, subject: "biology", chapter: "b-circulation", difficulty: "easy",
     q: "Which part of the brain regulates body temperature and hunger?",
     options: ["Hypothalamus", "Cerebellum", "Medulla oblongata", "Cerebrum"],
     answer: 0,
@@ -263,7 +263,7 @@ const PYQ_2019_2021 = [
     explanation: "Zoos and botanical gardens conserve organisms outside their natural habitat (ex situ); parks and reserves are in situ."
   },
   {
-    id: "pyq21-b4", year: 2021, subject: "biology", chapter: "b-human-physio", difficulty: "easy",
+    id: "pyq21-b4", year: 2021, subject: "biology", chapter: "b-excretion", difficulty: "easy",
     q: "The structural and functional unit of the kidney is the:",
     options: ["Nephron", "Neuron", "Alveolus", "Villus"],
     answer: 0,
@@ -332,7 +332,7 @@ const PYQ_2022_2024 = [
   },
 
   {
-    id: "pyq22-b1", year: 2022, subject: "biology", chapter: "b-human-physio", difficulty: "easy",
+    id: "pyq22-b1", year: 2022, subject: "biology", chapter: "b-digestion", difficulty: "easy",
     q: "Mucus in the stomach is secreted by:",
     options: ["Goblet cells", "Parietal cells", "Chief cells", "G-cells"],
     answer: 0,
@@ -529,7 +529,7 @@ const PYQ_2022_2024 = [
     explanation: "6CO₂ + 12H₂O → C₆H₁₂O₆ + 6O₂ + 6H₂O, so six O₂ molecules are released."
   },
   {
-    id: "pyq24-b4", year: 2024, subject: "biology", chapter: "b-human-physio", difficulty: "easy",
+    id: "pyq24-b4", year: 2024, subject: "biology", chapter: "b-locomotion", difficulty: "easy",
     q: "Which part of the brain maintains balance and coordinates muscular activity?",
     options: ["Cerebellum", "Cerebrum", "Hypothalamus", "Medulla oblongata"],
     answer: 0,
